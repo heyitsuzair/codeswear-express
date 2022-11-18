@@ -1,1 +1,1 @@
-Ecommerce Webapp Bacend Built By Muhammad Uzair. Made With :heart: By UZAIR. Backend: https://github.com/heyitsuzair/codeswear-next
+Ecommerce Webapp Bacend Built By Muhammad Uzair. Made With :heart: By UZAIR. Frontend: https://github.com/heyitsuzair/codeswear-next
