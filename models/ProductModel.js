@@ -17,10 +17,12 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   size: {
-    type: String,
+    type: Array,
+    default: [],
   },
   color: {
-    type: String,
+    type: Array,
+    default: [],
   },
   price: {
     type: Number,

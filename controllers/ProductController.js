@@ -88,6 +88,7 @@ module.exports.getProducts = async (req, res) => {
   try {
     const { category } = req.params;
     const products = await ProductModel.find({ category });
+
     return res.status(200).json({ error: false, products });
   } catch (error) {
     console.log(error);
@@ -103,6 +104,17 @@ module.exports.deleteProduct = async (req, res) => {
     } else {
       return res.status(400).json({ error: true, msg: "Something Went Wrong" });
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: true, msg: "Internal Server Error" });
+  }
+};
+module.exports.getProduct = async (req, res) => {
+  try {
+    const { slug } = req.params;
+    const product = await ProductModel.find({ slug });
+
+    return res.status(200).json({ error: false, product });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, msg: "Internal Server Error" });
