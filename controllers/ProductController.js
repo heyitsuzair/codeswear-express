@@ -86,7 +86,8 @@ module.exports.updateProduct = async (req, res) => {
 };
 module.exports.getProducts = async (req, res) => {
   try {
-    const products = await ProductModel.find();
+    const { category } = req.params;
+    const products = await ProductModel.find({ category });
     return res.status(200).json({ error: false, products });
   } catch (error) {
     console.log(error);
