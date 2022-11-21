@@ -1,6 +1,7 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
+const jwt = require("jsonwebtoken");
 
 module.exports.addUser = async (req, res) => {
   try {
@@ -73,6 +74,81 @@ module.exports.addUser = async (req, res) => {
       return res.status(400).json({ error: true, msg: "Something Went Wrong" });
       // Returning Response ---------------------------------------->
     }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: true, msg: "Internal Server Error" });
+  }
+};
+module.exports.loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    /**
+     * Select User From DB By @email
+     */
+
+    const isUserAvailableInDB = await UserModel.findOne({ email });
+
+    /**
+     * If User Not Available In Database Return An Error ----------->
+     */
+    if (!isUserAvailableInDB) {
+      return res.status(400).json({ error: true, msg: "User Doesnot Exists!" });
+    }
+
+    /**
+     * If User Not Available In Database Return An Error ----------->
+     */
+
+    /**
+     * If User Available In Database Then Execute The Code ----------->
+     */
+
+    /**
+     * Authenticate User --------------->
+     */
+
+    const isPasswordValid = await bcrypt.compare(
+      password,
+      isUserAvailableInDB.password
+    );
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ error: true, msg: "Invalid Credentials!" });
+    }
+
+    /**
+     * Authenticate User --------------->
+     */
+
+    /**
+     * Create @jwt Token --------------->
+     */
+
+    const jwtSecretKey = process.env.JWT_SECRET;
+    const data = {
+      userId: isUserAvailableInDB._id,
+    };
+
+    const token = jwt.sign(data, jwtSecretKey);
+
+    /**
+     * Create @jwt Token --------------->
+     */
+
+    /**
+     * Return @response -------------->
+     */
+
+    return res.status(200).json({ error: false, token });
+
+    /**
+     * Return @response -------------->
+     */
+
+    /**
+     * If User Available In Database Then Execute The Code ----------->
+     */
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: true, msg: "Internal Server Error" });
