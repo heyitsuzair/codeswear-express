@@ -38,7 +38,7 @@ module.exports.addUser = async (req, res) => {
 
     if (isUserAdded) {
       // Returning Response ---------------------------------------->
-      return res.status(200).json({ error: false, msg: "User Added!" });
+      return res.status(200).json({ error: false, msg: "User Created!" });
       // Returning Response ---------------------------------------->
     } else {
       // Returning Response ---------------------------------------->
