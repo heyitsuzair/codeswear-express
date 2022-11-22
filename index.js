@@ -8,6 +8,7 @@ const orderRoutes = require("./routes/OrderRoute");
 
 const app = express();
 require("dotenv").config();
+require("./cron");
 
 app.use(cors());
 app.use(express.json());

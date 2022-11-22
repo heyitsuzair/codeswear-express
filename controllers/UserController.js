@@ -1,7 +1,8 @@
 const UserModel = require("../models/UserModel");
 const bcrypt = require("bcryptjs");
-const nodemailer = require("nodemailer");
+
 const jwt = require("jsonwebtoken");
+const { sendEmail } = require("../mail");
 
 module.exports.addUser = async (req, res) => {
   try {
@@ -40,30 +41,11 @@ module.exports.addUser = async (req, res) => {
 
     if (isUserAdded) {
       // Sending Email ------------------->
-      var transporter = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          type: "OAuth2",
-          user: process.env.AUTH_NODEMAILER_USER,
-          pass: process.env.AUTH_NODEMAILER_PASSWORD,
-          clientId: process.env.OAUTH_CLIENT_ID,
-          clientSecret: process.env.OAUTH_CLIENT_SECRET,
-          refreshToken: process.env.OAUTH_REFRESH_TOKEN,
-        },
-      });
-
-      var mailOptions = {
-        from: "Codeswear " + process.env.AUTH_NODEMAILER_USER,
-        to: email,
-        subject: "Signup On Codeswear",
-        text: "Congratulations! You Have Successfully Signed Up On Codeswear.",
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        }
-      });
+      sendEmail(
+        email,
+        "Signup On Codeswear!",
+        "Congratulations You Have Successfully Signedup On Codeswear!"
+      );
       // Sending Email ------------------->
 
       // Returning Response ---------------------------------------->
