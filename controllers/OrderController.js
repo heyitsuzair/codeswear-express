@@ -52,7 +52,6 @@ module.exports.addOrder = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error(error);
     return res.status(401).json({
       error: true,
       msg: error.raw ? error.raw.message : "Unauthorized",
