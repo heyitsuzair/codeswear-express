@@ -16,7 +16,16 @@ module.exports.addOrder = async (req, res) => {
      * @token JWT Token To Ensure That User Is Authorized ------------>
      */
 
-    const { email, card_no, card_exp, card_cvc, card_year } = req.body;
+    const {
+      email,
+      card_no,
+      card_exp,
+      card_cvc,
+      card_year,
+      products,
+      address,
+      total,
+    } = req.body;
 
     if (isTokenVerified) {
       // Stripe Card Payment ---------------->
@@ -30,26 +39,32 @@ module.exports.addOrder = async (req, res) => {
       });
 
       const charge = await stripe.charges.create({
-        amount: 500000,
+        amount: total * 100,
         currency: "pkr",
         description: "Example Desc",
         source: stripetoken.id,
-        metadata: { order_id: "6735" },
       });
       // Stripe Card Payment ---------------->
 
-      const isOrderAdded = await OrderModel({});
+      if (charge.paid) {
+        const isOrderAdded = await OrderModel.create({
+          products,
+          email,
+          address,
+          amount: total,
+        });
 
-      sendEmail(
-        email,
-        "Receipt Of Payment",
-        "Your Receipt For Payment On Codeswear " + charge.receipt_url
-      );
-      return res.status(200).json({
-        error: false,
-        hasBeenCharged: charge.paid,
-        receipt_url: charge.receipt_url,
-      });
+        sendEmail(
+          email,
+          "Receipt Of Payment",
+          "Your Receipt For Payment On Codeswear " + charge.receipt_url
+        );
+        return res.status(200).json({
+          error: false,
+          hasBeenCharged: charge.paid,
+          receipt_url: charge.receipt_url,
+        });
+      }
     }
   } catch (error) {
     return res.status(401).json({
